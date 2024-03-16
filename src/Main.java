@@ -71,6 +71,7 @@ public class Main {
             }
         }else{
             System.out.println("Thank you for banking with us;");
+            System.exit(1);
         }
     }
     private static void viewBalance(){
@@ -211,15 +212,19 @@ public class Main {
         File file = new File(USER_DATA_FILE);
         try{
             Scanner output = new Scanner(file);
-            while(output.hasNextLine()){
-                String data = output.nextLine();
-                String[] userData = data.split(",");
-                String name = userData[0];
-                String email = userData[1];
-                String password = userData[2];
-                float balance = Float.parseFloat(userData[3]);
-                User user = new User(name, email, password, balance);
-                users.add(user);
+            if(output.hasNext()){
+                while(output.hasNextLine()){
+                    String data = output.nextLine();
+                    String[] userData = data.split(",");
+                    String name = userData[0];
+                    String email = userData[1];
+                    String password = userData[2];
+                    float balance = Float.parseFloat(userData[3]);
+                    User user = new User(name, email, password, balance);
+                    users.add(user);
+                }
+            }else{
+                return users;
             }
             output.close();
         } catch (IOException e) {
