@@ -3,13 +3,17 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 public class Main {
+
     private static final String USER_DATA_FILE = "userData.txt";
     private static User LOGGED_IN_USER = new User();
+    private static final FileUserDataManager dataManager = new FileUserDataManager(USER_DATA_FILE);
+
     public static void main(String[] args) throws InterruptedException, FileNotFoundException {
+
         System.out.println("======= System Specs Banking System ======");
         Scanner scanner = new Scanner(System.in);
 
-        ArrayList<User> users = loadUsers();
+        ArrayList<User> users = dataManager.loadUsers();
         String response = getUserResponse(scanner);
 
         if (response.equals("q")) {
@@ -36,6 +40,7 @@ public class Main {
             System.out.println("Invalid Input");
             System.exit(1);
     }
+
     private static void bankingSystem(Scanner scanner) throws InterruptedException, FileNotFoundException {
         System.out.println("What would you like to do today ? \nClick 1 to View Balance\nClick 2 to withdraw\nClick 3 to Deposit Money\nQ to quit");
         String response = scanner.next().toLowerCase();
@@ -158,14 +163,16 @@ public class Main {
         return input;
     }
    private static void createUserAccount(ArrayList<User> users, Scanner scanner ) {
+       var dataManager = new FileUserDataManager(USER_DATA_FILE);
        String name = getUserInput(scanner, "Full Name");
        String email = getUserInput(scanner, "Email Address");
        String password = getUserInput(scanner, "Password");
 
        User user = new User(name, email, password, 10000.00f);
        users.add(user);
-       saveUsers(users);
+       dataManager.saveUsers(users);
    }
+
    private static int loginUser(Scanner scanner, ArrayList<User> users) throws InterruptedException, FileNotFoundException {
         int wrongTry = 0;
        while(wrongTry < 3){
@@ -206,41 +213,5 @@ public class Main {
             }
         }
         return null;
-    }
-    private static ArrayList<User> loadUsers() {
-        ArrayList<User> users = new ArrayList<>();
-        File file = new File(USER_DATA_FILE);
-        try{
-            Scanner output = new Scanner(file);
-            if(output.hasNext()){
-                while(output.hasNextLine()){
-                    String data = output.nextLine();
-                    String[] userData = data.split(",");
-                    String name = userData[0];
-                    String email = userData[1];
-                    String password = userData[2];
-                    float balance = Float.parseFloat(userData[3]);
-                    User user = new User(name, email, password, balance);
-                    users.add(user);
-                }
-            }else{
-                return users;
-            }
-            output.close();
-        } catch (IOException e) {
-            System.out.println("Error Loading Users into the file...Error Message: \n" + e.getMessage());
-        }
-        return users;
-    }
-    private static void saveUsers(ArrayList<User> users) {
-        try {
-            PrintWriter input = new PrintWriter(USER_DATA_FILE);
-            for (User user : users) {
-                input.println(user.getName() + "," + user.getEmail() + "," + user.getPassword() + "," + user.getBalance());
-            }
-            input.close();
-        } catch (IOException e) {
-            System.out.println("Error Saving Users into the file...Error Message: \n" + e.getMessage());
-        }
     }
 }
