@@ -9,11 +9,10 @@ public class Main {
     private static final FileUserDataManager dataManager = new FileUserDataManager(USER_DATA_FILE);
 
     public static void main(String[] args) throws InterruptedException, FileNotFoundException {
-
-        System.out.println("======= System Specs Banking System ======");
         Scanner scanner = new Scanner(System.in);
-
         ArrayList<User> users = dataManager.loadUsers();
+
+        System.out.println("======= Banking System ======");
         String response = getUserResponse(scanner);
 
         if (response.equals("q")) {
@@ -206,6 +205,7 @@ public class Main {
        }
        return wrongTry;
    }
+
     public static User login(ArrayList<User> users, String email, String password){
         for(User user: users){
             if(user.getEmail().equals(email) && user.getPassword().equals(password) ){
