@@ -3,6 +3,7 @@ public class User {
     private String email;
     private String password;
     private float balance;
+
     User(String name, String email, String password, float balance){
         this.name = name;
         this.email = email;
